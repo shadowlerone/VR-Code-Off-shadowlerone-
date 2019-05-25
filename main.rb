@@ -8,9 +8,8 @@ require './bot_start'
 
 # Here we instantiate a `CommandBot` instead of a regular `Bot`, which has the functionality to add commands using the
 # `command` method. We have to set a `prefix` here, which will be the character that triggers command execution.
-
 #bot = BotLerone.new
-
+bot = Discordrb::Commands::CommandBot.new token: get_token, prefix: '!'
 swears_string = ""
 
 bot.message do |event|

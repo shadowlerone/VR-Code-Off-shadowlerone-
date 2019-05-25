@@ -1,11 +1,11 @@
 def censor_message event, swears_string
 	if (event.content =~ /#{swears_string}/)
-		event.respond "Found Objectionable content"
+		# event.respond "Found Objectionable content"
 		new_string = event.content.gsub(/#{swears_string}/, "*"*($&.length))
 		#event.message.delete
 		event.channel.send_embed do |embed|
 			embed.title = 'Swear Removal Service'
-			embed.message = new_string
+			embed.description = new_string
 		end
 	end
 end
