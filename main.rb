@@ -19,6 +19,12 @@ bot.message do |event|
 	censor_message event, swears_string
 end
 
+bot.message_edit do |event|
+	if event.message.edited?
+		censor_message event, swears_string, circ = true
+	end
+end
+
 
 bot.command(:invite, chain_usable: false) do |event|
   # This simply sends the bot's invite URL, without any specific permissions,
@@ -46,8 +52,7 @@ end
 bot.ready do |event|
 	puts "Ready!"
 	bot.game = "Victory Road Code Off - Fighting with shadowlerone"
-	bot.send_message "572770301948198942", "Hi <@196290553141264384>! I'm ready to roll."
-	"572770301948198942"
+	# bot.send_message "572770301948198942", "Hi <@196290553141264384>! I'm ready to roll."
 end
 swears_string = gen_swears_string()
 startup(bot)
