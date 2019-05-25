@@ -1,12 +1,19 @@
-def censor_message event, swears_string, circ = false
+
+def extention length, randoms
+	string = ""
+	length.times {|i| string << randoms.sample}
+	return string
+end
+def censor_message event, swears_string, randoms, circ = false
 	if (event.content =~ /#{swears_string}/)
 		# event.respond "Found Objectionable content"
-		new_string = "**#{event.author.display_name}**:#{event.content.gsub(/#{swears_string}/i, "•"*($&.length))}"
+		new_string = "**#{event.author.display_name}**:\t#{event.content.gsub(/#{swears_string}/i, extention($&.length, randoms))}"
 		event.message.delete
-		event.channel.send_embed do |embed|	
+		event.channel.send_embed do |embed|
+			# embed.color = 
 			if circ == true
-				embed.title = 'Swear Removal Service - Disciplinary Comity'
-				message = "\n|We've noticed you've tried to edit a swear into your message.\nAttempts to circumvent rules *will* result in a ban.|"
+				embed.title = 'Swear Removal Service - Disciplinary Committee'
+				message = "#{"="*10}\n\nWe've noticed you've tried to edit a swear into your message.\nAttempts to circumvent rules *will* result in a ban.\n#{"="*20}"
 			else
 				embed.title = 'Swear Removal Service'
 			end
@@ -27,5 +34,6 @@ def gen_swears_string
 	# puts array
 	swears_string = array.join("|")
 	# puts swears_string
-	return swears_string
+	randoms = data['randoms']
+	return [swears_string, randoms]
 end

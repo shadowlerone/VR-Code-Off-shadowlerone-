@@ -11,17 +11,18 @@ require './bot_start'
 #bot = BotLerone.new
 bot = Discordrb::Commands::CommandBot.new token: get_token, prefix: '!'
 swears_string = ""
+randoms = []
 
 bot.message do |event|
 	# break unless event.channel.id == "572770301948198942" # For the code off
 	# puts event.content
 	require './botlerone'
-	censor_message event, swears_string
+	censor_message(event, swears_string, randoms)
 end
 
 bot.message_edit do |event|
 	if event.message.edited?
-		censor_message event, swears_string, circ = true
+		censor_message event, swears_string,randoms, circ = true
 	end
 end
 
@@ -54,5 +55,5 @@ bot.ready do |event|
 	bot.game = "Victory Road Code Off - Fighting with shadowlerone"
 	# bot.send_message "572770301948198942", "Hi <@196290553141264384>! I'm ready to roll."
 end
-swears_string = gen_swears_string()
+swears_string, randoms = gen_swears_string()
 startup(bot)
