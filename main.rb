@@ -5,11 +5,13 @@ require './botlerone'
 require 'discordrb'
 require 'json'
 require './bot_start'
+require 'ohai'
+require 'os'
 
 # Here we instantiate a `CommandBot` instead of a regular `Bot`, which has the functionality to add commands using the
 # `command` method. We have to set a `prefix` here, which will be the character that triggers command execution.
 #bot = BotLerone.new
-bot = Discordrb::Commands::CommandBot.new token: get_token, prefix: '!'
+bot = Discordrb::Commands::CommandBot.new token: get_token, prefix: 's>'
 swears_string = ""
 randoms = []
 
@@ -31,6 +33,10 @@ bot.command(:invite, chain_usable: false) do |event|
   # This simply sends the bot's invite URL, without any specific permissions,
   # to the channel.
   event.bot.invite_url
+end
+
+bot.command :sysinfo do |event|
+	"```#{get_sysinfo}```"
 end
 
 bot.command :reload_swears do |event|
