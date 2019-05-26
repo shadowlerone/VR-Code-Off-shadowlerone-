@@ -2,6 +2,7 @@ require './response'
 require './calculator'
 require './censor'
 require './sysinfo'
+require './unit-converter'
 
 puts "bot lerone has been required"
 

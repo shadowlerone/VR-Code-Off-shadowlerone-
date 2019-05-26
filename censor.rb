@@ -4,6 +4,7 @@ def extention length, randoms
 	length.times {|i| string << randoms.sample}
 	return string
 end
+
 def censor_message event, swears_string, randoms, circ = false
 	if (event.content =~ /#{swears_string}/)
 		# event.respond "Found Objectionable content"

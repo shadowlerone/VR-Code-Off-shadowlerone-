@@ -7,6 +7,8 @@ require 'json'
 require './bot_start'
 require 'ohai'
 require 'os'
+require 'httparty'
+
 
 # Here we instantiate a `CommandBot` instead of a regular `Bot`, which has the functionality to add commands using the
 # `command` method. We have to set a `prefix` here, which will be the character that triggers command execution.
@@ -14,6 +16,13 @@ require 'os'
 bot = Discordrb::Commands::CommandBot.new token: get_token, prefix: 's>'
 swears_string = ""
 randoms = []
+fx = {}
+
+#regex for units
+distances = /mm|cm|m|km|in|ft|yd/i
+volumes = /ml|cc|l|oz|qt|gal/i
+temperatures = //
+
 
 bot.message do |event|
 	# break unless event.channel.id == "572770301948198942" # For the code off
@@ -39,6 +48,25 @@ bot.command :sysinfo do |event|
 	"```#{get_sysinfo}```"
 end
 
+bot.command(:from, min_args:4, max_args: 4, description: "Converts units and currencies", usage: "from <value> <unit> to <unit>") do |_event, value, unit1, to, unit2|
+	if !(to =~ /to/i)
+		return "Error Raised because Zap demands it. the function would still work :P"
+	end
+	if (unit1 =~  distances && unit1 =~ distances)
+		convert_distances(value.to_f, unit1, unit2)
+	end
+	convert_currency(value.to_f, unit1, unit2, fx)
+end
+
+bot.command(:eval, help_available: false) do |event, *code|
+	break unless event.user.id == 196290553141264384 # Replace number with your ID
+	begin
+		eval code.join(' ')
+	rescue StandardError
+		'An error occurred 😞'
+	end
+end
+
 bot.command :reload_swears do |event|
 	swears_string = gen_swears_string()
 	event << "Swears reloaded!"
@@ -60,6 +88,8 @@ bot.ready do |event|
 	puts "Ready!"
 	bot.game = "Victory Road Code Off - Fighting with shadowlerone"
 	# bot.send_message "572770301948198942", "Hi <@196290553141264384>! I'm ready to roll."
+	swears_string, randoms = gen_swears_string()
+	fx = get_exchange_rate()
 end
-swears_string, randoms = gen_swears_string()
+
 startup(bot)
