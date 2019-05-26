@@ -13,7 +13,7 @@ require 'httparty'
 # Here we instantiate a `CommandBot` instead of a regular `Bot`, which has the functionality to add commands using the
 # `command` method. We have to set a `prefix` here, which will be the character that triggers command execution.
 #bot = BotLerone.new
-bot = Discordrb::Commands::CommandBot.new token: get_token, prefix: 's>'
+bot = Discordrb::Commands::CommandBot.new token: get_token, prefix: 's>', spaces_allowed: true,
 swears_string = ""
 randoms = []
 fx = {}
@@ -100,6 +100,69 @@ end
 bot.command(:random, min_args: 0, max_args: 2, description: 'Dunno why I\'m here...', usage: 'I\' probably get commented out soon...') do |_event, min, max|
 	"I shouldn't exist..."
 end
+
+
+bot.command(bot.attributes[:help_command], max_args: 1, description: 'Shows a list of all the commands available or displays help about a specific command.', usage: 'help [command name]') do |event, command_name|
+	if command_name
+		command = bot.commands[command_name.to_sym]
+		if command.is_a?(Discordrb::Commands::CommandAlias)
+			command = command.aliased_command
+			command_name = command.name
+		end
+		unless command
+			event.channel.send_embed do |embed|
+				embed.title = "Lerone Bot Helpline"
+				embed.description = "The command `#{command_name}` does not exist!"
+				ft_text = "We will be with you shortly. Please hold..."
+				ic_url = "https://cdn.shopify.com/s/files/1/1151/9112/products/image_199487ac-517a-4fbd-a1c4-2853f3de975c_large.png"
+				embed.footer = Discordrb::Webhooks::EmbedFooter.new(text: ft_text, icon_url: ic_url)
+			end
+		end
+
+		desc = command.attributes[:description] || '*No description available*'
+		usage = command.attributes[:usage]
+		parameters = command.attributes[:parameters]
+		result = "**`#{command_name}`**: #{desc}"
+		aliases = bot.command_aliases(command_name.to_sym)
+		unless aliases.empty?
+			result += "\nAliases: "
+			result += aliases.map {|a| "`#{a.name}`" }.join(', ')
+		end
+		result += "\nUsage: `#{usage}`" if usage;
+		if parameters
+			result += "\nAccepted Parameters:\n```"
+			parameters.each {|p| result += "\n#{p}"}
+			result += '```'
+		end
+		
+		out = result
+		
+	else
+		available_commands = bot.commands.values.reject do |c|
+			c.is_a?(Discordrb::Commands::CommandAlias) || !c.attributes[:help_available]
+		end
+		available_commands.reduce "**List of commands:**\n" do |memo, c|
+			out = memo + "**`#{c.name}`**: #{c.attributes[:description] || '*No description available*'}\n"
+		end
+	end
+	event.channel.send_embed do |embed|
+		embed.title = "Lerone Bot Helpline"
+		embed.description = out;
+		ft_text = "We will be with you shortly. Please hold..."
+		ic_url = "https://cdn.shopify.com/s/files/1/1151/9112/products/image_199487ac-517a-4fbd-a1c4-2853f3de975c_large.png"
+		embed.footer = Discordrb::Webhooks::EmbedFooter.new(text: ft_text, icon_url: ic_url)
+	end
+end
+
+
+
+
+
+
+
+
+
+
 
 bot.ready do |event|
 	puts "Ready!"
