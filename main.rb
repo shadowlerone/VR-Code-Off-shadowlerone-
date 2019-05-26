@@ -26,7 +26,7 @@ r = {
 	'currencies' => /^aud$|^usd$|^cad$|^yen$|^gbp$|^nzd$/
 }
 
-maths_r = //
+maths_r = /^((\(|\d+\.\d|\d+| [\^*+\-\/] | |\)))+$/i
 
 bot.message do |event|
 	# break unless event.channel.id == "572770301948198942" # For the code off'
@@ -88,16 +88,7 @@ bot.command(:eval, help_available: false) do |event, *code|
 end
 
 bot.command(:calc) do |event, *code|
-	math = code.join(' ')
-	if (math =~ /^((\(|\d+\.\d|\d+| [\^*+\-/] | |\)))+$/i)
-		begin
-			eval math.gsub('^', '**')
-		rescue StandardError
-			"Maths are hard. I'm trying my best."
-		end
-	else
-		"Sorry, your formatting is incorrect"
-	end
+	calculate(event, code)
 end
 
 bot.command :reload_swears, description: "I reload the swear list!" do |event|
