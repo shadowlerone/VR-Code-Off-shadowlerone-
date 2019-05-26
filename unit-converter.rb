@@ -8,9 +8,9 @@ Currencies = {
 }
 
 def convert_currency value, base, final, fx
-	if final == cad
+	if final == 'cad'
 		value * fx["FX#{Currencies[base]}CAD"]['v']
-	elsif base == cad
+	elsif base == 'cad'
 		value * (1/fx["FX#{Currencies[final]}CAD"]['v'])
 	else	
 		value * fx["FX#{Currencies[base]}CAD"]['v'] 
