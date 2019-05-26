@@ -1,9 +1,9 @@
 ## Calculator
-def calculate event, code
+def calculate event, code, maths_r
 	math = code.join(' ')
 	if (math =~ maths_r)
 		begin
-			out = eval math.gsub('^', '**')
+			out = '%.4f' % eval(math.gsub('^', '**'))
 		rescue StandardError
 			out = "Maths are hard. I'm trying my best."
 		end

@@ -49,7 +49,7 @@ def gen_swears_string
 	return [swears_string, randoms]
 end
 
-def addSwear *args
+def addSwear args
 	data = JSON.parse(File.read("swears.json"))
 	args.each{|s|
 		data['swears'] << s

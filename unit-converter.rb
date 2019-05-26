@@ -9,6 +9,25 @@ Currencies = {
 	'usd' => 'USD'
 }
 
+To_mm = {
+	'ft' => 304.8,
+	'cm' => 10,
+	'm' => 1000,
+	'km' => 1000000,
+	'in' => 25.4,
+	'yd' => 914.4,
+	'mm' => 1
+}
+
+To_ml = {
+	'oz' => 29.5735,
+	'ml' => 1,
+	'cc' => 1,
+	'L' => 1000,
+	'qt' => 25.4,
+	'gal' => 914.4,
+}
+
 def convert_currency value, base, final, fx
 	if final == 'cad'
 		'%.2f' % (value * fx["FX#{Currencies[base]}CAD"]['v'])
@@ -20,15 +39,29 @@ def convert_currency value, base, final, fx
 end
 
 def convert_d(value, base, final)
-	WIP << "\tDistances"
+	'%.2f' % (value * To_mm[base] * (1/To_mm[final]))
 end
 
 def convert_v(value, base, final)
-	WIP << "\tVolumes"
+	'%.2f' % (value * To_ml[base] * (1/To_ml[final]))
 end
 
 def convert_temps(value, base, final)
-	WIP << "\tTemps"
+	if base == "f"
+		interim = value *  9/5 + 32
+	elsif base == "c"
+		interim = value
+	elsif base = "k"
+		interim = value - 273
+	end
+
+	if base == "f"
+		value * 1/(9/5 + 32)
+	elsif base == "c"
+		interim
+	elsif base = "k"
+		interim + 273
+	end
 end
 
 def get_exchange_rate

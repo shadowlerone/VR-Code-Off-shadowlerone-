@@ -88,7 +88,12 @@ bot.command(:eval, help_available: false) do |event, *code|
 end
 
 bot.command(:calc) do |event, *code|
-	calculate(event, code)
+	calculate(event, code, maths_r)
+end
+
+bot.command(:add_swear) do |event, *code|
+	addSwear(code)
+	swears_string = gen_swears_string()
 end
 
 bot.command :reload_swears, description: "I reload the swear list!" do |event|
