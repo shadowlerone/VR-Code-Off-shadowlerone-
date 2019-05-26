@@ -19,15 +19,15 @@ randoms = []
 fx = {}
 
 #regex for units
-distances = /mm|cm|m|km|in|ft|yd/i
-volumes = /ml|cc|l|oz|qt|gal/i
-temperatures = //
-
+r = {
+	'distances' => /^mm$|^cm$|^m$|^km$|^in$|^ft$|^yd$/i,
+	'temperatures' => /^c$|^f$|^k$/,
+	'volumes' => /^ml$|^cc$|^l$|^oz$|^qt$|^gal$/i,
+	'currencies' => /^aud$|^usd$|^cad$|^yen$|^gbp$|^nzd$/
+}
 
 bot.message do |event|
-	# break unless event.channel.id == "572770301948198942" # For the code off
-	# puts event.content
-	require './botlerone'
+	# break unless event.channel.id == "572770301948198942" # For the code off'
 	censor_message(event, swears_string, randoms)
 end
 
@@ -49,19 +49,30 @@ bot.command :sysinfo do |event|
 end
 
 bot.command(:from, min_args:4, max_args: 4, description: "Converts units and currencies", usage: "from <value> <unit> to <unit>") do |_event, value, unit1, to, unit2|
+	# convert(_event, value, unit1, to, unit2, fx, r)
+	#ic_url = "http://andraelewis.ca/assets/music2.jpg"
 	if !(to =~ /to/i)
-		return "Error Raised because Zap demands it. the function would still work :P"
+		return "Error Raised because <@87118368078835712> demands it. the function would still work :P"
 	end
-	if (unit1 =~  distances && unit1 =~ distances)
-		convert_d(value.to_f, unit1, unit2)
-	elsif (unit1 =~ volumes) && (unit1 =~ volumes)
-		convert_v(value.to_f, unit1, unit2)
-	elsif (unit1 =~ temperatures) && (unit1 =~ temperatures)
-		convert_temps(value.to_f, unit1, unit2)
-	elsif (unit1 =~ currencies) && (unit1 =~ currencies)
-		convert_currency(value.to_f, unit1, unit2, fx)
+	if (unit1 =~  r['distances']) && (unit1 =~ r['distances'])
+		out = convert_d(value.to_f, unit1, unit2)
+	elsif (unit1 =~ r['volumes']) && (unit1 =~ r['volumes'])
+		out = convert_v(value.to_f, unit1, unit2)
+	elsif (unit1 =~ r['temperatures']) && (unit1 =~ r['temperatures'])
+		out = convert_temps(value.to_f, unit1, unit2)
+	elsif (unit1 =~ r['currencies']) && (unit1 =~ r['currencies'])
+		out = convert_currency(value.to_f, unit1, unit2, fx)
+		ic_url = "https://botw-pd.s3.amazonaws.com/styles/logo-thumbnail/s3/052012/bank-of-canada_blk-converted.png"
+		ft_text = "Currency exchange rates gracefully supplied by the Bank of Canada"
 	else
-		return "Sorry, but your unit is not valid."
+		out = "Sorry, but your unit is not valid."
+	end
+	ft_text ||= 'Lerone Bot - Unit Converter'
+	title = "Unit Convertion Unit"
+	_event.channel.send_embed do |embed|
+		embed.title = title
+		embed.description = out
+		embed.footer = Discordrb::Webhooks::EmbedFooter.new(text: ft_text, icon_url: ic_url)
 	end
 end
 
