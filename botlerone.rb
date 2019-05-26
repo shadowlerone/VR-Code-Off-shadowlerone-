@@ -3,6 +3,7 @@ require './calculator'
 require './censor'
 require './sysinfo'
 require './unit-converter'
+require './whats-hot'
 
 puts "bot lerone has been required"
 

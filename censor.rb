@@ -49,10 +49,21 @@ def gen_swears_string
 	return [swears_string, randoms]
 end
 
-def addSwear args
+def addSwear event, args
 	data = JSON.parse(File.read("swears.json"))
+	puts args
 	args.each{|s|
-		data['swears'] << s
+		data['swears'].append s
 	}
-	data
+	file = File.open("swears.json", "w")
+	file.puts(JSON.generate(data))
+	file.close()
+	event.channel.send_embed do |embed|
+		embed.title = 'Swear Removal Service'
+		embed.description = "We appreciate your concern. We have added `#{args.join('`` `')}` to our list of watch words"
+		ft_text = 'Lerone Bot - Language Police'
+		ic_url = "https://cdn.shopify.com/s/files/1/1151/9112/products/image_199487ac-517a-4fbd-a1c4-2853f3de975c_large.png"
+		embed.footer = Discordrb::Webhooks::EmbedFooter.new(text: ft_text, icon_url: ic_url)
+	end
+	return
 end

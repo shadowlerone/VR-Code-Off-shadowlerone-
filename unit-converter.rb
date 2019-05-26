@@ -51,7 +51,7 @@ def convert_temps(value, base, final)
 		interim = value *  9/5 + 32
 	elsif base == "c"
 		interim = value
-	elsif base = "k"
+	elsif base == "k"
 		interim = value - 273
 	end
 
@@ -59,7 +59,7 @@ def convert_temps(value, base, final)
 		value * 1/(9/5 + 32)
 	elsif base == "c"
 		interim
-	elsif base = "k"
+	elsif base == "k"
 		interim + 273
 	end
 end
@@ -71,9 +71,9 @@ def get_exchange_rate
 end
 
 def convert event, value, unit1, to, unit2, fx, r
-	ic_url = "http://andraelewis.ca/assets/music2.jpg"
+	# ic_url = "http://andraelewis.ca/assets/music2.jpg"
 	if !(to =~ /to/i)
-		return "Error Raised because <@87118368078835712> demands it. the function would still work :P"
+		event << "Error raised because <@87118368078835712> demands `to` and not `#{to}`. The function would still work :P"
 	end
 	if (unit1 =~  r['distances']) && (unit1 =~ r['distances'])
 		out = convert_d(value.to_f, unit1, unit2)
@@ -83,14 +83,16 @@ def convert event, value, unit1, to, unit2, fx, r
 		out = convert_temps(value.to_f, unit1, unit2)
 	elsif (unit1 =~ r['currencies']) && (unit1 =~ r['currencies'])
 		out = convert_currency(value.to_f, unit1, unit2, fx)
-		# ic_url = "https://upload.wikimedia.org/wikipedia/en/7/7e/BankOfCanada.svg"
+		ic_url = "https://botw-pd.s3.amazonaws.com/styles/logo-thumbnail/s3/052012/bank-of-canada_blk-converted.png"
+		ft_text = "Currency exchange rates gracefully supplied by the Bank of Canada"
 	else
-		out = "Sorry, but your unit is not valid."
+		out = "Check your units.\nMy physics teacher keeps telling me that if I have the wrong units, you're garanteed to have the wrong answer.\nYou have the wrong answer.\nCheck your units."
 	end
+	ft_text ||= 'Lerone Bot - Unit Converter'
 	title = "Unit Convertion Squad"
 	event.channel.send_embed do |embed|
 		embed.title = title.to_s
-		embed.description = "About #{out.to_s}"
+		embed.description = "About #{out.to_s} #{unit2}"
 		embed.footer = Discordrb::Webhooks::EmbedFooter.new(text: ft_text, icon_url: ic_url)
 	end
 end
