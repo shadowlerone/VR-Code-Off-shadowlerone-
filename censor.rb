@@ -6,7 +6,7 @@ def extention length, randoms
 end
 
 def censor_message event, swears_string, randoms, circ = false
-	if (event.content =~ /#{swears_string}/)
+	if (event.content =~ /#{swears_string}/i)
 		# event.respond "Found Objectionable content"
 		new_string = "**#{event.author.display_name}**:\t#{event.content.gsub(/#{swears_string}/i, extention($&.length, randoms))}"
 		event.message.delete

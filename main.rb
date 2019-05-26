@@ -45,7 +45,7 @@ bot.command(:invite, chain_usable: false) do |event|
 end
 
 bot.command :sysinfo do |event|
-	"```#{get_sysinfo}```"
+	"So I don't actually work, but here's the best I've got...\n```#{get_sysinfo}```"
 end
 
 bot.command(:from, min_args:4, max_args: 4, description: "Converts units and currencies", usage: "from <value> <unit> to <unit>") do |_event, value, unit1, to, unit2|
@@ -53,9 +53,16 @@ bot.command(:from, min_args:4, max_args: 4, description: "Converts units and cur
 		return "Error Raised because Zap demands it. the function would still work :P"
 	end
 	if (unit1 =~  distances && unit1 =~ distances)
-		convert_distances(value.to_f, unit1, unit2)
+		convert_d(value.to_f, unit1, unit2)
+	elsif (unit1 =~ volumes) && (unit1 =~ volumes)
+		convert_v(value.to_f, unit1, unit2)
+	elsif (unit1 =~ temperatures) && (unit1 =~ temperatures)
+		convert_temps(value.to_f, unit1, unit2)
+	elsif (unit1 =~ currencies) && (unit1 =~ currencies)
+		convert_currency(value.to_f, unit1, unit2, fx)
+	else
+		return "Sorry, but your unit is not valid."
 	end
-	convert_currency(value.to_f, unit1, unit2, fx)
 end
 
 bot.command(:eval, help_available: false) do |event, *code|
@@ -67,21 +74,13 @@ bot.command(:eval, help_available: false) do |event, *code|
 	end
 end
 
-bot.command :reload_swears do |event|
+bot.command :reload_swears, description: "I reload the swear list!" do |event|
 	swears_string = gen_swears_string()
 	event << "Swears reloaded!"
 end
 
-bot.command(:random, min_args: 0, max_args: 2, description: 'Generates a random number between 0 and 1, 0 and max or min and max.', usage: 'random [min/max] [max]') do |_event, min, max|
-  # The `if` statement returns one of multiple different things based on the condition. Its return value
-  # is then returned from the block and sent to the channel
-  if max
-    rand(min.to_i..max.to_i)
-  elsif min
-    rand(0..min.to_i)
-  else
-    rand
-  end
+bot.command(:random, min_args: 0, max_args: 2, description: 'Dunno why I\'m here...', usage: 'I\' probably get commented out soon...') do |_event, min, max|
+	"I shouldn't exist..."
 end
 
 bot.ready do |event|
