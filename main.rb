@@ -26,6 +26,8 @@ r = {
 	'currencies' => /^aud$|^usd$|^cad$|^yen$|^gbp$|^nzd$/
 }
 
+maths_r = //
+
 bot.message do |event|
 	# break unless event.channel.id == "572770301948198942" # For the code off'
 	censor_message(event, swears_string, randoms)
@@ -52,7 +54,7 @@ bot.command(:from, min_args:4, max_args: 4, description: "Converts units and cur
 	# convert(_event, value, unit1, to, unit2, fx, r)
 	#ic_url = "http://andraelewis.ca/assets/music2.jpg"
 	if !(to =~ /to/i)
-		return "Error Raised because <@87118368078835712> demands it. the function would still work :P"
+		event << "Error raised because <@87118368078835712> demands `to` and not `#{to}`. The function would still work :P"
 	end
 	if (unit1 =~  r['distances']) && (unit1 =~ r['distances'])
 		out = convert_d(value.to_f, unit1, unit2)
@@ -65,7 +67,7 @@ bot.command(:from, min_args:4, max_args: 4, description: "Converts units and cur
 		ic_url = "https://botw-pd.s3.amazonaws.com/styles/logo-thumbnail/s3/052012/bank-of-canada_blk-converted.png"
 		ft_text = "Currency exchange rates gracefully supplied by the Bank of Canada"
 	else
-		out = "Sorry, but your unit is not valid."
+		out = "Check your units.\nMy physics teacher keeps telling me that if I have the wrong units, you're garanteed to have the wrong answer.\nYou have the wrong answer.\nCheck your units."
 	end
 	ft_text ||= 'Lerone Bot - Unit Converter'
 	title = "Unit Convertion Unit"
@@ -82,6 +84,19 @@ bot.command(:eval, help_available: false) do |event, *code|
 		eval code.join(' ')
 	rescue StandardError
 		'An error occurred 😞'
+	end
+end
+
+bot.command(:calc) do |event, *code|
+	math = code.join(' ')
+	if (math =~ /^((\(|\d+\.\d|\d+| [\^*+\-/] | |\)))+$/i)
+		begin
+			eval math.gsub('^', '**')
+		rescue StandardError
+			"Maths are hard. I'm trying my best."
+		end
+	else
+		"Sorry, your formatting is incorrect"
 	end
 end
 

@@ -48,3 +48,11 @@ def gen_swears_string
 	randoms = data['randoms']
 	return [swears_string, randoms]
 end
+
+def addSwear *args
+	data = JSON.parse(File.read("swears.json"))
+	args.each{|s|
+		data['swears'] << s
+	}
+	data
+end
