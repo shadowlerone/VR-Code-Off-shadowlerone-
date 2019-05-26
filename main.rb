@@ -78,12 +78,12 @@ bot.command(:add_swear, description: "I add words to the swear list!") do |event
 	file.close()
 	event.channel.send_embed do |embed|
 		embed.title = 'Swear Removal Service'
-		embed.description = "We appreciate your concern. We have added `#{code.join('``, `')}` to our list of watch words.\nPlease reload the swear list manually."
+		embed.description = "We appreciate your concern. We have added `#{code.join('`, `')}` to our list of watch words.\nPlease reload the swear list manually with `reload_swears`."
 		ft_text = 'Lerone Bot - Language Police'
 		ic_url = "https://cdn.shopify.com/s/files/1/1151/9112/products/image_199487ac-517a-4fbd-a1c4-2853f3de975c_large.png"
 		embed.footer = Discordrb::Webhooks::EmbedFooter.new(text: ft_text, icon_url: ic_url)
 	end
-	swears_string, randoms = gen_swears_string()
+	# swears_string, randoms = gen_swears_string()
 end
 
 bot.command :reload_swears, description: "I reload the swear list!" do |event|
